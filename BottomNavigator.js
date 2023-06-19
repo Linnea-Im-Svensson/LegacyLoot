@@ -3,6 +3,7 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import ProfileScreen from './screens/ProfileScreen';
 import LootModule from './components/LootModule';
 import HomeScreen from './screens/HomeScreen';
+import InsideStackNavigator from './InsideStackNavigator';
 
 const Tab = createBottomTabNavigator();
 
@@ -15,8 +16,11 @@ const BottomNavigator = () => {
         headerShown: false,
         tabBarStyle: {
           backgroundColor: '#1791AC',
+          borderTopWidth: 0,
+          paddingTop: 5,
         },
       }}
+      initialRouteName='Home'
     >
       <Tab.Screen
         name='Profile'

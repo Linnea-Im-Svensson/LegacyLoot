@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react';
 import { View, StyleSheet, ActivityIndicator } from 'react-native';
 import { firebaseDB } from '../firebase';
-import { collection, query, where, onSnapshot } from 'firebase/firestore';
+import { collection, query, where, getDocs } from 'firebase/firestore';
 import ItemContainer from '../components/ItemContainer';
+import ItemContainer2 from '../components/ItemContainer2';
 
 const CategoryScreen = ({ route }) => {
   const { category } = route.params;
@@ -11,19 +12,15 @@ const CategoryScreen = ({ route }) => {
   const itemCollectionRef = collection(firebaseDB, 'items');
 
   useEffect(() => {
-    const q = query(
-      itemCollectionRef,
-      where('category', '==', category.toLowerCase())
-    );
-
-    const getCategoryItems = () => {
+    const getCategoryItems = async () => {
       try {
-        const data = onSnapshot(q, (querySnapShot) => {
-          const items = [];
-
-          querySnapShot.forEach((doc) => items.push(doc.data()));
-          setItemList(items);
-        });
+        const data = await getDocs(
+          query(
+            itemCollectionRef,
+            where('category', '==', category.toLowerCase())
+          )
+        );
+        setItemList(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
       } catch (error) {
         console.log(error);
       } finally {
@@ -39,7 +36,7 @@ const CategoryScreen = ({ route }) => {
       {loading ? (
         <ActivityIndicator size='large' color='lightblue' />
       ) : (
-        <ItemContainer itemList={itemList} loading={loading} />
+        <ItemContainer2 itemList={itemList} />
       )}
     </View>
   );

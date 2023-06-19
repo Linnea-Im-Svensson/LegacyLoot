@@ -10,11 +10,12 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import { firebaseAuth } from '../firebase';
+import { firebaseAuth, firebaseDB } from '../firebase';
 import {
   signInWithEmailAndPassword,
   createUserWithEmailAndPassword,
 } from 'firebase/auth';
+import { collection, addDoc } from 'firebase/firestore';
 
 const LoginScreen = () => {
   const [loginForm, setLoginForm] = useState({
@@ -30,38 +31,60 @@ const LoginScreen = () => {
   const auth = firebaseAuth;
 
   const handleLogIn = async () => {
-    setLoading(true);
-    try {
-      const response = await signInWithEmailAndPassword(
-        auth,
-        loginForm.email,
-        loginForm.password
-      );
-      console.log(response);
-    } catch (error) {
-      console.log(error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const handleRegister = async () => {
-    if (loginForm.password === loginForm.password2) {
+    if (loginForm.email !== '' && loginForm.password !== '') {
       setLoading(true);
       try {
-        const response = await createUserWithEmailAndPassword(
+        const response = await signInWithEmailAndPassword(
           auth,
           loginForm.email,
           loginForm.password
         );
         console.log(response);
       } catch (error) {
-        alert(error.message);
+        console.log(error);
       } finally {
         setLoading(false);
       }
     } else {
-      alert('password doesnt match');
+      alert('Please fill in all fields');
+    }
+  };
+
+  const handleRegister = async () => {
+    const accountCollectionRef = collection(firebaseDB, 'accounts');
+    if (
+      loginForm.email !== '' &&
+      loginForm.phoneNr !== '' &&
+      loginForm.password !== '' &&
+      loginForm.password2 !== ''
+    ) {
+      if (loginForm.password === loginForm.password2) {
+        setLoading(true);
+        try {
+          const response = await createUserWithEmailAndPassword(
+            auth,
+            loginForm.email,
+            loginForm.password
+          );
+          const uid = response.user.uid;
+
+          const newAccount = await addDoc(accountCollectionRef, {
+            uid,
+            phoneNr: loginForm.phoneNr,
+            savedItems: [],
+          });
+
+          console.log(response);
+        } catch (error) {
+          alert(error.message);
+        } finally {
+          setLoading(false);
+        }
+      } else {
+        alert('password doesnt match');
+      }
+    } else {
+      alert('Please fill in all fields');
     }
   };
 
@@ -76,7 +99,7 @@ const LoginScreen = () => {
           style={styles.input}
           inputMode='email'
         />
-        {/* {register && (
+        {register && (
           <TextInput
             placeholder='Phonenumber'
             value={loginForm.phoneNr}
@@ -86,7 +109,7 @@ const LoginScreen = () => {
             style={styles.input}
             inputMode='numeric'
           />
-        )} */}
+        )}
         <TextInput
           placeholder='Password'
           value={loginForm.password}

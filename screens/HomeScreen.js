@@ -1,29 +1,17 @@
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, ScrollView } from 'react-native';
 import ItemContainer from '../components/ItemContainer';
 import CategoryContainer from '../components/CategoryContainer';
 import { firebaseDB } from '../firebase';
-import { collection, getDocs } from 'firebase/firestore';
+import { collection, getDocs, orderBy, query } from 'firebase/firestore';
 import { useState, useEffect } from 'react';
+import ItemContainer2 from '../components/ItemContainer2';
+import { useContext } from 'react';
+import { LegacyLootContext } from '../store/context/legacyLootContext';
 
-const HomeScreen = ({ navigation }) => {
-  const [itemList, setItemList] = useState([]);
-  const [loading, setLoading] = useState(false);
-
-  const itemCollectionRef = collection(firebaseDB, 'items');
+const HomeScreen = () => {
+  const { getAllItems, itemList } = useContext(LegacyLootContext);
 
   useEffect(() => {
-    const getAllItems = async () => {
-      setLoading(true);
-      try {
-        const data = await getDocs(itemCollectionRef);
-        setItemList(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
-      } catch (error) {
-        console.log(error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
     getAllItems();
   }, []);
 
@@ -31,7 +19,7 @@ const HomeScreen = ({ navigation }) => {
     <View style={styles.container}>
       <CategoryContainer />
       <View style={styles.allItemsContainer}>
-        <ItemContainer itemList={itemList} loading={loading} />
+        <ItemContainer2 itemList={itemList} />
       </View>
     </View>
   );

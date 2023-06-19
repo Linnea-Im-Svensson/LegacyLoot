@@ -25,6 +25,7 @@ const LootModule = () => {
     category: '',
     sold: false,
     uid: loggedInUser.uid,
+    createdAt: new Date(),
   });
   const categories = ['shoes', 'clothes', 'accessories', 'furnitures'];
   const navigation = useNavigation();
@@ -38,7 +39,7 @@ const LootModule = () => {
       alert('Please choose a category');
     } else {
       const newItem = await addDoc(itemCollectionRef, lootInfo);
-      navigation.navigate('Home');
+      navigation.navigate('Profile');
     }
   };
 

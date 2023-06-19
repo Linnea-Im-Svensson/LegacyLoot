@@ -1,16 +1,16 @@
 import { useNavigation } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import HomeScreen from './screens/HomeScreen';
 import { StyleSheet, Text, TouchableOpacity } from 'react-native';
 import { firebaseAuth } from './firebase';
 import CategoryScreen from './screens/CategoryScreen';
-import ProfileScreen from './screens/ProfileScreen';
 import LootModule from './components/LootModule';
-import ItemScreen from './screens/ItemScreen';
+import ItemScreen, { deleteItem } from './screens/ItemScreen';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { LegacyLootContext } from './store/context/legacyLootContext';
 import { useContext } from 'react';
 import BottomNavigator from './BottomNavigator';
+import DrawerNavigator from './DrawerNavigator';
+import QRScreen from './screens/QRScreen';
 
 const InsideStack = createNativeStackNavigator();
 
@@ -21,7 +21,7 @@ const SignedInStack = () => {
     <InsideStack.Navigator
       screenOptions={{
         headerStyle: {
-          backgroundColor: '#1791AC',
+          backgroundColor: '#333',
         },
         headerTintColor: 'white',
       }}
@@ -36,6 +36,10 @@ const SignedInStack = () => {
             </TouchableOpacity>
           ),
           title: 'LegacyLoot',
+          headerTitleStyle: {
+            fontSize: 30,
+            fontWeight: '8test00',
+          },
         }}
       />
       <InsideStack.Screen
@@ -57,23 +61,33 @@ const SignedInStack = () => {
                 name='trash'
                 backgroundColor='none'
                 size={25}
-                onPress={() => console.log('ta bort')}
+                onPress={() => (
+                  deleteItem(route.params.item.id), navigator.goBack()
+                )}
+                style={styles.headerBtn}
+              />
+            ),
+          headerLeft: () =>
+            route.params.item.uid === loggedInUser.uid && (
+              <FontAwesome.Button
+                name='pencil'
+                backgroundColor='none'
+                size={25}
+                onPress={() => console.log('edit')}
                 style={styles.headerBtn}
               />
             ),
         })}
       />
       <InsideStack.Screen
-        name='Profile'
-        component={ProfileScreen}
-        options={{
-          headerRight: () => (
-            <TouchableOpacity onPress={() => navigator.navigate('NewLoot')}>
-              <Text style={styles.headerBtn}>Add loot</Text>
-            </TouchableOpacity>
-          ),
-        }}
+        name='QR'
+        component={QRScreen}
+        options={({ route }) => ({
+          title: 'LegacyLoot',
+          presentation: 'modal',
+        })}
       />
+
       <InsideStack.Screen
         name='NewLoot'
         component={LootModule}
