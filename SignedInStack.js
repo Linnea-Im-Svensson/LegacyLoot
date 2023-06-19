@@ -10,6 +10,7 @@ import ItemScreen from './screens/ItemScreen';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { LegacyLootContext } from './store/context/legacyLootContext';
 import { useContext } from 'react';
+import BottomNavigator from './BottomNavigator';
 
 const InsideStack = createNativeStackNavigator();
 
@@ -26,17 +27,12 @@ const SignedInStack = () => {
       }}
     >
       <InsideStack.Screen
-        name='Home'
-        component={HomeScreen}
+        name='BottomNav'
+        component={BottomNavigator}
         options={{
           headerLeft: () => (
             <TouchableOpacity onPress={() => firebaseAuth.signOut()}>
               <Text style={styles.headerBtn}>Sign out</Text>
-            </TouchableOpacity>
-          ),
-          headerRight: () => (
-            <TouchableOpacity onPress={() => navigator.navigate('Profile')}>
-              <Text style={styles.headerBtn}>Profile</Text>
             </TouchableOpacity>
           ),
           title: 'LegacyLoot',

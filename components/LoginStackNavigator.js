@@ -7,6 +7,7 @@ import { firebaseAuth } from '../firebase';
 import SignedInStack from '../SignedInStack';
 import { LegacyLootContext } from '../store/context/legacyLootContext';
 import { useContext } from 'react';
+import BottomNavigator from '../BottomNavigator';
 
 const Stack = createNativeStackNavigator();
 

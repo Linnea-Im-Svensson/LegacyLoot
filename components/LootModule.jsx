@@ -102,7 +102,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'space-between',
     backgroundColor: '#333',
-    paddingVertical: 50,
+    paddingVertical: 20,
   },
   inputContainer: {
     width: '80%',
