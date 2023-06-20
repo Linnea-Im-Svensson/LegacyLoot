@@ -14,6 +14,10 @@ const CategoryContainer = () => {
         category={'Furnitures'}
         image={require('../assets/furnitures.jpg')}
       />
+      <Category
+        category={'Furnishings'}
+        image={require('../assets/furnishing.jpg')}
+      />
     </ScrollView>
   );
 };

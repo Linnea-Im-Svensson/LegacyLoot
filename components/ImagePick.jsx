@@ -1,22 +1,58 @@
+import { firebaseApp, firebaseStorage } from '../firebase';
 import { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { Camera, CameraType } from 'expo-camera';
+import { useContext } from 'react';
+import { LegacyLootContext } from '../store/context/legacyLootContext';
+import uuid from 'react-native-uuid';
+import { getBytes, ref, uploadBytes } from 'firebase/storage';
+
+export const uploadImage = async (uri) => {
+  const { setUpImage } = useContext(LegacyLootContext);
+  const blob = await new Promise((resolve, reject) => {
+    const xhr = new XMLHttpRequest();
+    xhr.onload = function () {
+      resolve(xhr.response);
+    };
+    xhr.onerror = function (e) {
+      console.log(e);
+      reject(new TypeError('Network request failed'));
+    };
+    xhr.responseType = 'blob';
+    xhr.open('GET', uri, true);
+    xhr.send(null);
+  });
+
+  try {
+    const storageRef = ref(firebaseStorage, `images/img-${uuid.v4()}`);
+    const result = await uploadBytes(storageRef, blob);
+    console.log('results: ', typeof result.metadata.fullPath);
+    const snapshot = await ref.put(blob);
+    blob.close();
+    // console.log(getBytes(storageRef));
+    // getDownloadURL(storageRef).then((url) => console.log('url', url));
+    setUpImage(result.metadata.fullPath);
+  } catch (error) {
+    console.log(error);
+  }
+};
 
 const ImagePick = () => {
-  const [image, setImage] = useState(null);
+  const { image, setImage } = useContext(LegacyLootContext);
 
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.All,
       allowsEditing: true,
       aspect: [4, 3],
-      quality: 1,
+      quality: 0,
     });
 
     if (!result.canceled) {
       setImage(result.assets[0].uri);
     }
+    console.log('bild: ', result);
   };
 
   return (

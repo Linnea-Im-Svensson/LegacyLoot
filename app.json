@@ -30,12 +30,6 @@
         {
           "photosPermission": "Allow LegacyLoot to access your photos"
         }
-      ],
-      [
-        "expo-camera",
-        {
-          "cameraPermission": "Allow LegacyLoot to access your camera."
-        }
       ]
     ]
   }

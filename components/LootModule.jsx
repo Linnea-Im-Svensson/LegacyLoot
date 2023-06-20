@@ -7,17 +7,27 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import SelectDropdown from 'react-native-select-dropdown';
-import ImagePick from './ImagePick';
-import { firebaseDB } from '../firebase';
+import ImagePick, { uploadImage } from './ImagePick';
+import { firebaseDB, firebaseStorage } from '../firebase';
 import { addDoc, collection } from 'firebase/firestore';
 import { useNavigation } from '@react-navigation/native';
 import { LegacyLootContext } from '../store/context/legacyLootContext';
 import { useContext } from 'react';
+import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+import uuid from 'react-native-uuid';
 
 const itemCollectionRef = collection(firebaseDB, 'items');
 
 const LootModule = () => {
-  const { loggedInUser } = useContext(LegacyLootContext);
+  const { loggedInUser, image, setImage, upImage, setUpImage } =
+    useContext(LegacyLootContext);
+
+  const storageRef = ref(
+    firebaseStorage,
+    `images/img-82fadd6a-3c37-4ddc-b97d-c1c42c6446f8`
+  );
+  // getDownloadURL(storageRef).then((data) => console.log('final test: ', data));
+
   const [lootInfo, setLootInfo] = useState({
     title: '',
     price: '',
@@ -25,10 +35,49 @@ const LootModule = () => {
     category: '',
     sold: false,
     uid: loggedInUser.uid,
-    createdAt: new Date(),
+    createdAt: null,
+    image: '',
   });
-  const categories = ['shoes', 'clothes', 'accessories', 'furnitures'];
+  const categories = [
+    'shoes',
+    'clothes',
+    'accessories',
+    'furnitures',
+    'furnishing',
+  ];
   const navigation = useNavigation();
+
+  const uploadImage = async (uri) => {
+    const blob = await new Promise((resolve, reject) => {
+      const xhr = new XMLHttpRequest();
+      xhr.onload = function () {
+        resolve(xhr.response);
+      };
+      xhr.onerror = function (e) {
+        console.log(e);
+        reject(new TypeError('Network request failed'));
+      };
+      xhr.responseType = 'blob';
+      xhr.open('GET', uri, true);
+      xhr.send(null);
+    });
+
+    try {
+      const storageRef = ref(firebaseStorage, `images/img-${uuid.v4()}`);
+      const result = await uploadBytes(storageRef, blob).then(
+        (data) => (lootInfo.image = data.metadata.fullPath)
+      );
+
+      const url = await getDownloadURL(storageRef).then(
+        (data) => (lootInfo.image = data)
+      );
+
+      const snapshot = await ref.put(blob);
+      blob.close();
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const handleNewLoot = async () => {
     if (lootInfo.title === '') {
@@ -38,7 +87,20 @@ const LootModule = () => {
     } else if (lootInfo.category === '') {
       alert('Please choose a category');
     } else {
+      await uploadImage(image);
+      lootInfo.createdAt = new Date();
       const newItem = await addDoc(itemCollectionRef, lootInfo);
+      setLootInfo({
+        title: '',
+        price: '',
+        description: '',
+        category: '',
+        sold: false,
+        uid: loggedInUser.uid,
+        createdAt: null,
+        image: '',
+      });
+      setImage(null);
       navigation.navigate('Profile');
     }
   };

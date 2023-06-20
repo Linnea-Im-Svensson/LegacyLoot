@@ -8,6 +8,8 @@ export const LegacyLootContext = createContext({
   userAccount: [],
   refresh: true,
   loading: false,
+  image: '',
+  upImage: '',
   setLoggedInUser: () => {},
   profileItemList: [],
   setProfileItemList: () => {},
@@ -15,6 +17,8 @@ export const LegacyLootContext = createContext({
   setRefresh: () => {},
   getAllItems: () => {},
   setLoading: () => {},
+  setImage: () => {},
+  setUpImage: () => {},
 });
 
 const LegacyLootContextProvider = ({ children }) => {
@@ -25,6 +29,9 @@ const LegacyLootContextProvider = ({ children }) => {
   const [refresh, setRefresh] = useState(true);
   const [loading, setLoading] = useState(false);
   const itemCollectionRef = collection(firebaseDB, 'items');
+  const [image, setImage] = useState(null);
+  const [upImage, setUpImage] = useState('');
+  // console.log('upimage: ', upImage);
 
   const getAllItems = async () => {
     setLoading(true);
@@ -37,11 +44,8 @@ const LegacyLootContextProvider = ({ children }) => {
       console.log(error);
     } finally {
       setLoading(false);
-      console.log(itemList);
     }
   };
-
-  console.log(refresh);
 
   if (loggedInUser && !userAccount) {
     const getAccount = async () => {
@@ -70,6 +74,8 @@ const LegacyLootContextProvider = ({ children }) => {
         userAccount,
         refresh,
         loading,
+        image,
+        upImage,
         setItemList,
         setProfileItemList,
         setLoggedInUser,
@@ -77,6 +83,8 @@ const LegacyLootContextProvider = ({ children }) => {
         setRefresh,
         getAllItems,
         setLoading,
+        setImage,
+        setUpImage,
       }}
     >
       {children}

@@ -6,6 +6,7 @@ import { LegacyLootContext } from '../store/context/legacyLootContext';
 import { useContext } from 'react';
 import ItemContainer from '../components/ItemContainer';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
+import ItemContainer2 from '../components/ItemContainer2';
 
 const ProfileScreen = () => {
   const { userAccount, refresh } = useContext(LegacyLootContext);
@@ -50,7 +51,7 @@ const ProfileScreen = () => {
         {loading ? (
           <ActivityIndicator size='large' color='lightblue' />
         ) : (
-          <ItemContainer itemList={itemList} loading={loading} />
+          <ItemContainer2 itemList={itemList} />
         )}
       </View>
     </View>

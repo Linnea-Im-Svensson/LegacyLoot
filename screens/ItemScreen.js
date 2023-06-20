@@ -59,7 +59,7 @@ const ItemScreen = ({ route }) => {
     <View style={styles.container}>
       <View style={styles.imgContainer}>
         <Image
-          source={require('../assets/shoes.jpg')}
+          source={{ uri: item.image }}
           defaultSource={require('../assets/logo.png')}
           style={styles.img}
           resizeMode='cover'

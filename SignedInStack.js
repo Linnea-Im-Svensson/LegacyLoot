@@ -56,7 +56,7 @@ const SignedInStack = () => {
           title: route.params.item.title,
           presentation: 'modal',
           headerRight: () =>
-            route.params.item.uid === loggedInUser.uid && (
+            route.params.item.uid === loggedInUser.uid ? (
               <FontAwesome.Button
                 name='trash'
                 backgroundColor='none'
@@ -65,6 +65,18 @@ const SignedInStack = () => {
                   deleteItem(route.params.item.id), navigator.goBack()
                 )}
                 style={styles.headerBtn}
+              />
+            ) : (
+              <FontAwesome.Button
+                name='heart'
+                iconStyle={{
+                  color: 'red',
+                }}
+                backgroundColor='none'
+                size={25}
+                onPress={() => console.log('bookmark')}
+                style={styles.headerBtn}
+                light
               />
             ),
           headerLeft: () =>
