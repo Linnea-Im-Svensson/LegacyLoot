@@ -47,6 +47,7 @@ const ItemContainer2 = ({ itemList, typeOfItem }) => {
       numColumns={2}
       style={styles.container}
       initialNumToRender={6}
+      maxToRenderPerBatch={6}
       refreshControl={
         <RefreshControl
           refreshing={refresh}

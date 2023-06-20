@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { View, Text, ActivityIndicator, StyleSheet } from 'react-native';
+import { View, Text, ActivityIndicator, StyleSheet, Image } from 'react-native';
 import { firebaseDB } from '../firebase';
 import { collection, query, where, getDocs } from 'firebase/firestore';
 import { LegacyLootContext } from '../store/context/legacyLootContext';
@@ -26,8 +26,15 @@ const ProfileScreen = () => {
   return (
     <View style={styles.container}>
       <View style={styles.userInfoContainer}>
-        <FontAwesome name='user' size={50} color='white' />
+        <Image
+          source={require('../assets/shoes.jpg')}
+          style={styles.profilePic}
+        />
         <View style={styles.textContainer}>
+          <View style={styles.userInfoTextContainer}>
+            <FontAwesome name='user' size={25} />
+            <Text>{userAccount.phoneNr}</Text>
+          </View>
           <View style={styles.userInfoTextContainer}>
             <FontAwesome name='phone' size={25} />
             <Text>{userAccount.phoneNr}</Text>
@@ -61,9 +68,17 @@ const styles = StyleSheet.create({
     padding: 10,
     backgroundColor: '#cdcdcd',
     borderRadius: 10,
+    gap: 4,
+  },
+  profilePic: {
+    marginVertical: 15,
+    height: 100,
+    width: 100,
+    borderRadius: '50',
+    alignSelf: 'center',
   },
   itemContainer: {
-    flex: 4,
+    flex: 2,
     backgroundColor: '#333',
   },
   myLootText: {
@@ -74,15 +89,14 @@ const styles = StyleSheet.create({
     marginVertical: 10,
   },
   userInfoContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flex: 1,
     paddingHorizontal: 15,
     gap: 15,
     marginTop: 10,
+    marginBottom: 10,
   },
   userInfoTextContainer: {
     flexDirection: 'row',
     gap: 10,
-    alignItems: 'center',
   },
 });

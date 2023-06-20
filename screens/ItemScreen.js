@@ -26,7 +26,6 @@ const ItemScreen = ({ route }) => {
   const { userAccount } = useContext(LegacyLootContext);
   const [qr, setQr] = useState();
   const navigation = useNavigation();
-  console.log('i item mdul: ', item, userAccount, 'qr: ', qr);
 
   useEffect(() => {
     const generateQrCode = async () => {
