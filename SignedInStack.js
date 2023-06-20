@@ -16,7 +16,8 @@ const InsideStack = createNativeStackNavigator();
 
 const SignedInStack = () => {
   const navigator = useNavigation();
-  const { loggedInUser } = useContext(LegacyLootContext);
+  const { loggedInUser, profileRefresh, setProfileRefresh } =
+    useContext(LegacyLootContext);
   return (
     <InsideStack.Navigator
       screenOptions={{
@@ -61,16 +62,18 @@ const SignedInStack = () => {
                 name='trash'
                 backgroundColor='none'
                 size={25}
-                onPress={() => (
-                  deleteItem(route.params.item.id), navigator.goBack()
-                )}
+                onPress={() =>
+                  deleteItem(route.params.item.id)
+                    .then(setProfileRefresh(!profileRefresh))
+                    .then(navigator.goBack())
+                }
                 style={styles.headerBtn}
               />
             ) : (
               <FontAwesome.Button
-                name='heart'
+                name='bookmark-o'
                 iconStyle={{
-                  color: 'red',
+                  color: 'lightblue',
                 }}
                 backgroundColor='none'
                 size={25}
@@ -94,9 +97,18 @@ const SignedInStack = () => {
       <InsideStack.Screen
         name='QR'
         component={QRScreen}
-        options={({ route }) => ({
+        options={() => ({
           title: 'LegacyLoot',
           presentation: 'modal',
+          headerRight: () => (
+            <FontAwesome.Button
+              name='close'
+              backgroundColor='none'
+              size={25}
+              onPress={() => navigator.goBack()}
+              style={styles.headerBtn}
+            />
+          ),
         })}
       />
 

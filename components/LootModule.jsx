@@ -19,7 +19,7 @@ import uuid from 'react-native-uuid';
 const itemCollectionRef = collection(firebaseDB, 'items');
 
 const LootModule = () => {
-  const { loggedInUser, image, setImage, upImage, setUpImage } =
+  const { loggedInUser, image, setImage, profileRefresh, setProfileRefresh } =
     useContext(LegacyLootContext);
 
   const storageRef = ref(
@@ -101,6 +101,7 @@ const LootModule = () => {
         image: '',
       });
       setImage(null);
+      setProfileRefresh(!profileRefresh);
       navigation.navigate('Profile');
     }
   };

@@ -8,15 +8,14 @@ import { LegacyLootContext } from '../store/context/legacyLootContext';
 const QRScreen = ({ route }) => {
   const { blob, item } = route.params;
   const navigation = useNavigation();
-  const { refresh, setRefresh } = useContext(LegacyLootContext);
+  const { profileRefresh, setProfileRefresh } = useContext(LegacyLootContext);
 
   const handleSold = async () => {
     const itemSold = doc(firebaseDB, 'items', item.id);
 
-    const updatedItem = await updateDoc(itemSold, { sold: !item.sold }).then(
-      setRefresh(!refresh),
-      navigation.navigate('Profile')
-    );
+    const updatedItem = await updateDoc(itemSold, { sold: !item.sold });
+    navigation.navigate('Profile');
+    setProfileRefresh(!profileRefresh);
   };
 
   console.log(route.params);

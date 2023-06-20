@@ -12,14 +12,19 @@ import { LegacyLootContext } from '../store/context/legacyLootContext';
 import SkeletonItem from './SkeletonItem';
 import { useNavigation } from '@react-navigation/native';
 
-const ItemContainer2 = ({ itemList }) => {
+const ItemContainer2 = ({ itemList, typeOfItem }) => {
   const [refresh, setRefresh] = useState(false);
-  const { getAllItems, loading, setLoading } = useContext(LegacyLootContext);
+  const { getAllItems, loading, setLoading, getProfileItems } =
+    useContext(LegacyLootContext);
   const navigation = useNavigation();
 
   const onRefresh = useCallback(() => {
     setRefresh(true);
-    getAllItems();
+    if (typeOfItem === 'profile') {
+      getProfileItems();
+    } else {
+      getAllItems();
+    }
     setTimeout(() => {
       setRefresh(false);
     }, 1000);

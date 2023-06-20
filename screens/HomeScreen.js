@@ -9,11 +9,11 @@ import { useContext } from 'react';
 import { LegacyLootContext } from '../store/context/legacyLootContext';
 
 const HomeScreen = () => {
-  const { getAllItems, itemList } = useContext(LegacyLootContext);
+  const { getAllItems, itemList, refresh } = useContext(LegacyLootContext);
 
   useEffect(() => {
     getAllItems();
-  }, []);
+  }, [refresh]);
 
   return (
     <View style={styles.container}>

@@ -9,28 +9,19 @@ import FontAwesome from '@expo/vector-icons/FontAwesome';
 import ItemContainer2 from '../components/ItemContainer2';
 
 const ProfileScreen = () => {
-  const { userAccount, refresh } = useContext(LegacyLootContext);
-  const [itemList, setItemList] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const itemCollectionRef = collection(firebaseDB, 'items');
-
-  const getProfileItems = async () => {
-    try {
-      const data = await getDocs(
-        query(itemCollectionRef, where('uid', '==', userAccount.uid))
-      );
-      setItemList(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
-    } catch (error) {
-      console.log(error);
-    } finally {
-      setLoading(false);
-    }
-  };
+  const {
+    userAccount,
+    profileRefresh,
+    profileItemList,
+    getProfileItems,
+    loading,
+  } = useContext(LegacyLootContext);
+  // const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     getProfileItems();
     console.log('profile refreshed');
-  }, [refresh]);
+  }, [profileRefresh]);
 
   return (
     <View style={styles.container}>
@@ -51,7 +42,7 @@ const ProfileScreen = () => {
         {loading ? (
           <ActivityIndicator size='large' color='lightblue' />
         ) : (
-          <ItemContainer2 itemList={itemList} />
+          <ItemContainer2 itemList={profileItemList} typeOfItem={'profile'} />
         )}
       </View>
     </View>

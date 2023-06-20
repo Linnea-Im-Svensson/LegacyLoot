@@ -7,6 +7,7 @@ export const LegacyLootContext = createContext({
   loggedInUser: [],
   userAccount: [],
   refresh: true,
+  profileRefresh: false,
   loading: false,
   image: '',
   upImage: '',
@@ -15,10 +16,12 @@ export const LegacyLootContext = createContext({
   setProfileItemList: () => {},
   setUserAccount: () => {},
   setRefresh: () => {},
+  setProfileRefresh: () => {},
   getAllItems: () => {},
   setLoading: () => {},
   setImage: () => {},
   setUpImage: () => {},
+  getProfileItems: () => {},
 });
 
 const LegacyLootContextProvider = ({ children }) => {
@@ -27,11 +30,13 @@ const LegacyLootContextProvider = ({ children }) => {
   const [loggedInUser, setLoggedInUser] = useState(null);
   const [userAccount, setUserAccount] = useState(null);
   const [refresh, setRefresh] = useState(true);
+  const [profileRefresh, setProfileRefresh] = useState(true);
   const [loading, setLoading] = useState(false);
   const itemCollectionRef = collection(firebaseDB, 'items');
   const [image, setImage] = useState(null);
   const [upImage, setUpImage] = useState('');
-  // console.log('upimage: ', upImage);
+
+  console.log('profile list: ', profileItemList);
 
   const getAllItems = async () => {
     setLoading(true);
@@ -40,6 +45,26 @@ const LegacyLootContextProvider = ({ children }) => {
         query(itemCollectionRef, orderBy('createdAt', 'desc'))
       );
       setItemList(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const profileItemCollectionRef = collection(firebaseDB, 'items');
+  const getProfileItems = async () => {
+    try {
+      const data = await getDocs(
+        query(
+          profileItemCollectionRef,
+          orderBy('createdAt', 'desc'),
+          where('uid', '==', userAccount.uid)
+        )
+      );
+      setProfileItemList(
+        data.docs.map((doc) => ({ ...doc.data(), id: doc.id }))
+      );
     } catch (error) {
       console.log(error);
     } finally {
@@ -73,6 +98,7 @@ const LegacyLootContextProvider = ({ children }) => {
         loggedInUser,
         userAccount,
         refresh,
+        profileRefresh,
         loading,
         image,
         upImage,
@@ -81,10 +107,12 @@ const LegacyLootContextProvider = ({ children }) => {
         setLoggedInUser,
         setUserAccount,
         setRefresh,
+        setProfileRefresh,
         getAllItems,
         setLoading,
         setImage,
         setUpImage,
+        getProfileItems,
       }}
     >
       {children}
