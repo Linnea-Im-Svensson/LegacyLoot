@@ -17,18 +17,22 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 const ChatScreen = () => {
   const [chatrooms, setChatrooms] = useState([]);
   const navigation = useNavigation();
+  const [deleteBtn, setDeleteBtn] = useState({ active: false, chatId: null });
 
   useLayoutEffect(() => {
     const chatRef = collection(firebaseDB, 'chats');
     const q = query(
       chatRef,
-      where('sellerId', '==', firebaseAuth.currentUser.uid),
+      where(('sellerId', 'buyerId'), '==', firebaseAuth.currentUser.uid),
       orderBy('createdAt', 'desc')
     );
 
     const getChatRooms = async () => {
       const data = await getDocs(
-        query(chatRef, where('sellerId', '==', firebaseAuth.currentUser.uid)),
+        query(
+          chatRef,
+          where(('sellerId', 'buyerId'), '==', firebaseAuth.currentUser.uid)
+        ),
         orderBy('createdAt', 'desc')
       );
       setChatrooms(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
@@ -37,6 +41,7 @@ const ChatScreen = () => {
     const unsubscribe = onSnapshot(q, (snapshot) => {
       // console.log(snapshot);
       setChatrooms(snapshot.docs.map((doc) => doc.data()));
+      console.log('snap: ', chatrooms);
     });
 
     getChatRooms();
@@ -72,20 +77,19 @@ const styles = StyleSheet.create({
   },
   chatroomContainer: {
     flex: 1,
-    backgroundColor: '#cdcdcd',
     margin: 20,
     padding: 10,
     borderRadius: 10,
   },
   roomContainer: {
-    borderWidth: 2,
-    borderStyle: 'solid',
+    backgroundColor: '#eee',
     padding: 10,
     borderRadius: 10,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'start',
     gap: 20,
+    marginBottom: 15,
   },
   img: {
     height: 100,

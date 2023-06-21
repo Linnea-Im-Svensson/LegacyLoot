@@ -5,6 +5,8 @@ import {
   StyleSheet,
   TextInput,
   TouchableOpacity,
+  Keyboard,
+  TouchableWithoutFeedback,
 } from 'react-native';
 import SelectDropdown from 'react-native-select-dropdown';
 import ImagePick, { uploadImage } from './ImagePick';
@@ -107,54 +109,58 @@ const LootModule = () => {
   };
 
   return (
-    <View style={styles.container}>
-      <View style={styles.inputContainer}>
-        <TextInput
-          placeholder='Title'
-          placeholderTextColor='#333'
-          style={styles.input}
-          value={lootInfo.title}
-          inputMode='text'
-          onChangeText={(text) => setLootInfo({ ...lootInfo, title: text })}
-        />
-        <TextInput
-          placeholder='Price'
-          placeholderTextColor='#333'
-          style={styles.input}
-          value={lootInfo.price}
-          inputMode='numeric'
-          onChangeText={(nr) => setLootInfo({ ...lootInfo, price: nr })}
-        />
-        <TextInput
-          placeholder='Description'
-          placeholderTextColor='#333'
-          style={[styles.input, styles.description]}
-          value={lootInfo.description}
-          multiline
-          numberOfLines={4}
-          inputMode='text'
-          onChangeText={(text) =>
-            setLootInfo({ ...lootInfo, description: text })
-          }
-        />
-        <SelectDropdown
-          data={categories}
-          onSelect={(selectedCategory) =>
-            setLootInfo({ ...lootInfo, category: selectedCategory })
-          }
-          buttonStyle={styles.categoryBtn}
-          dropdownStyle={styles.categoryDropdown}
-          selectedRowStyle={styles.categorySelectedRow}
-          defaultButtonText='Choose a category'
-        />
-        <ImagePick />
+    <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+      <View style={styles.container}>
+        <View style={styles.inputContainer}>
+          <TextInput
+            placeholder='Title'
+            placeholderTextColor='#333'
+            style={styles.input}
+            value={lootInfo.title}
+            inputMode='text'
+            onChangeText={(text) => setLootInfo({ ...lootInfo, title: text })}
+          />
+
+          <TextInput
+            placeholder='Price'
+            placeholderTextColor='#333'
+            style={styles.input}
+            value={lootInfo.price}
+            inputMode='numeric'
+            onChangeText={(nr) => setLootInfo({ ...lootInfo, price: nr })}
+          />
+          <TextInput
+            placeholder='Description'
+            placeholderTextColor='#333'
+            style={[styles.input, styles.description]}
+            value={lootInfo.description}
+            multiline
+            numberOfLines={4}
+            inputMode='text'
+            onChangeText={(text) =>
+              setLootInfo({ ...lootInfo, description: text })
+            }
+          />
+          <SelectDropdown
+            data={categories}
+            onSelect={(selectedCategory) =>
+              setLootInfo({ ...lootInfo, category: selectedCategory })
+            }
+            buttonStyle={styles.categoryBtn}
+            dropdownStyle={styles.categoryDropdown}
+            selectedRowStyle={styles.categorySelectedRow}
+            defaultButtonText='Choose a category'
+          />
+          <ImagePick />
+        </View>
+
+        <View style={styles.btnContainer}>
+          <TouchableOpacity style={styles.createBtn} onPress={handleNewLoot}>
+            <Text>Create loot</Text>
+          </TouchableOpacity>
+        </View>
       </View>
-      <View style={styles.btnContainer}>
-        <TouchableOpacity style={styles.createBtn} onPress={handleNewLoot}>
-          <Text>Create loot</Text>
-        </TouchableOpacity>
-      </View>
-    </View>
+    </TouchableWithoutFeedback>
   );
 };
 

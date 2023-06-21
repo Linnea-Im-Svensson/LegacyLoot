@@ -18,7 +18,7 @@ const Category = ({ category, image }) => {
       }
     >
       <ImageBackground
-        source={image}
+        source={{ uri: image }}
         defaultSource={require('../assets/logo.png')}
         resizeMethod='auto'
         style={styles.backgroundImage}

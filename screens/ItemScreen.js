@@ -74,7 +74,7 @@ const ItemScreen = ({ route }) => {
 
     console.log(newRoom.data());
 
-    navigation.navigate('Chatroom', { room: newRoom });
+    navigation.navigate('Chatroom');
   };
 
   // navigation.navigate('QR', { blob: qr, item: item });

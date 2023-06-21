@@ -1,5 +1,5 @@
 import { useCallback, useLayoutEffect, useState } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, SafeAreaView } from 'react-native';
 import { GiftedChat, InputToolbar } from 'react-native-gifted-chat';
 import { useNavigation } from '@react-navigation/native';
 import {
@@ -81,7 +81,7 @@ const Chat = () => {
           _id: firebaseAuth?.currentUser?.uid,
           avatar: null,
         }}
-        messagesContainerStyle={{ backgroundColor: '#333' }}
+        messagesContainerStyle={{ backgroundColor: '#333', padding: 10 }}
         renderInputToolbar={(props) => customToolbar(props)}
       />
     </View>
