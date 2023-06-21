@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "re-sell",
-    "slug": "re-sell",
+    "slug": "legacyloot",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -11,15 +11,22 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.linneasvensson.legacyloot"
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "permissions": [
+        "android.permission.RECORD_AUDIO"
+      ],
+      "package": "com.linneasvensson.legacyloot"
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -31,6 +38,12 @@
           "photosPermission": "Allow LegacyLoot to access your photos"
         }
       ]
-    ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "5346a4f7-70d6-4c04-ae77-f9674d7907b9"
+      }
+    },
+    "owner": "linnea-svensson"
   }
 }
