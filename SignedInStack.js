@@ -1,6 +1,6 @@
 import { useNavigation } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import { StyleSheet, Text, TouchableOpacity } from 'react-native';
+import { SafeAreaView, StyleSheet, Text, TouchableOpacity } from 'react-native';
 import { firebaseAuth, firebaseDB } from './firebase';
 import CategoryScreen from './screens/CategoryScreen';
 import LootModule from './components/LootModule';
@@ -13,6 +13,7 @@ import DrawerNavigator from './DrawerNavigator';
 import QRScreen from './screens/QRScreen';
 import { doc, query, updateDoc, where } from 'firebase/firestore';
 import BookmarkScreen from './screens/BookmarkScreen';
+import Chat from './components/Chat';
 
 const InsideStack = createNativeStackNavigator();
 
@@ -161,6 +162,13 @@ const SignedInStack = () => {
         name='NewLoot'
         component={LootModule}
         options={{ headerShown: true, title: 'Add new loot' }}
+      />
+      <InsideStack.Screen
+        name='Chatroom'
+        component={Chat}
+        options={({ route }) => ({
+          title: route.params.room.roomName,
+        })}
       />
     </InsideStack.Navigator>
   );

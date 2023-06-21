@@ -4,6 +4,7 @@ import ProfileScreen from './screens/ProfileScreen';
 import LootModule from './components/LootModule';
 import HomeScreen from './screens/HomeScreen';
 import InsideStackNavigator from './InsideStackNavigator';
+import ChatScreen from './screens/ChatScreen';
 
 const Tab = createBottomTabNavigator();
 
@@ -23,6 +24,16 @@ const BottomNavigator = () => {
       initialRouteName='Home'
     >
       <Tab.Screen
+        name='Home'
+        component={HomeScreen}
+        options={{
+          tabBarLabel: 'Home',
+          tabBarIcon: ({ color, size }) => (
+            <MaterialCommunityIcons name='home' size={size} color={color} />
+          ),
+        }}
+      />
+      <Tab.Screen
         name='Profile'
         component={ProfileScreen}
         options={{
@@ -33,12 +44,12 @@ const BottomNavigator = () => {
         }}
       />
       <Tab.Screen
-        name='Home'
-        component={HomeScreen}
+        name='Chat'
+        component={ChatScreen}
         options={{
-          tabBarLabel: 'Home',
+          tabBarLabel: 'Messages',
           tabBarIcon: ({ color, size }) => (
-            <MaterialCommunityIcons name='home' size={size} color={color} />
+            <MaterialCommunityIcons name='chat' size={size} color={color} />
           ),
         }}
       />

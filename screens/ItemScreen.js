@@ -1,5 +1,14 @@
 import { View, StyleSheet, Text, Image, TouchableOpacity } from 'react-native';
-import { updateDoc, doc, deleteDoc } from 'firebase/firestore';
+import {
+  updateDoc,
+  doc,
+  deleteDoc,
+  collection,
+  addDoc,
+  getDoc,
+  query,
+  where,
+} from 'firebase/firestore';
 import { firebaseAuth, firebaseDB } from '../firebase';
 import { useEffect, useState } from 'react';
 import { useContext } from 'react';
@@ -52,6 +61,22 @@ const ItemScreen = ({ route }) => {
     generateQrCode();
   }, []);
 
+  const handleNewChatRoom = async () => {
+    const collectionRef = collection(firebaseDB, 'chats');
+
+    const newRoom = await addDoc(collectionRef, {
+      sellerId: item.uid,
+      buyerId: firebaseAuth.currentUser.uid,
+      roomName: item.title,
+      roomImg: item.image,
+      messages: [],
+    });
+
+    console.log(newRoom.data());
+
+    navigation.navigate('Chatroom', { room: newRoom });
+  };
+
   // navigation.navigate('QR', { blob: qr, item: item });
 
   return (
@@ -79,7 +104,7 @@ const ItemScreen = ({ route }) => {
             <Text>Generate Swish QR code</Text>
           </TouchableOpacity>
         ) : (
-          <TouchableOpacity style={styles.btn}>
+          <TouchableOpacity style={styles.btn} onPress={handleNewChatRoom}>
             <Text>Contact seller</Text>
           </TouchableOpacity>
         )}
