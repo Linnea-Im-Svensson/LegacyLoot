@@ -1,30 +1,31 @@
-import { firebaseApp, firebaseStorage } from '../firebase';
-import { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
 import { Camera, CameraType } from 'expo-camera';
 import { useContext } from 'react';
 import { LegacyLootContext } from '../store/context/legacyLootContext';
-import uuid from 'react-native-uuid';
-import { getBytes, ref, uploadBytes } from 'firebase/storage';
 
 const ImagePick = () => {
   const { image, setImage } = useContext(LegacyLootContext);
 
   const pickImage = async () => {
-    const permission = await ImagePicker.requestMediaLibraryPermissionsAsync();
-    if (permission.granted) {
-      let result = await ImagePicker.launchImageLibraryAsync({
-        mediaTypes: ImagePicker.MediaTypeOptions.All,
-        allowsEditing: true,
-        aspect: [4, 3],
-        quality: 0,
-      });
+    try {
+      const permission =
+        await ImagePicker.requestMediaLibraryPermissionsAsync();
+      if (permission.granted) {
+        let result = await ImagePicker.launchImageLibraryAsync({
+          mediaTypes: ImagePicker.MediaTypeOptions.All,
+          allowsEditing: true,
+          aspect: [4, 3],
+          quality: 0,
+        });
 
-      if (!result.canceled) {
-        setImage(result.assets[0].uri);
+        if (!result.canceled) {
+          setImage(result.assets[0].uri);
+        }
+        console.log('bild: ', result);
       }
-      console.log('bild: ', result);
+    } catch (error) {
+      console.log(error);
     }
   };
 

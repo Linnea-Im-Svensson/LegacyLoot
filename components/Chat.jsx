@@ -5,60 +5,51 @@ import { useNavigation } from '@react-navigation/native';
 import {
   addDoc,
   collection,
+  doc,
+  getDoc,
+  getDocs,
   onSnapshot,
   orderBy,
   query,
+  updateDoc,
+  where,
 } from 'firebase/firestore';
 import { firebaseAuth, firebaseDB } from '../firebase';
+import { color } from 'react-native-reanimated';
 
-const Chat = () => {
-  const [messages, setMessages] = useState([]);
+const Chat = ({ route }) => {
+  const [messageList, setMessageList] = useState([]);
+  const roomId = route.params.room.id;
+  const [testa, setTesta] = useState(null);
+  console.log('message: ', messageList);
 
   useLayoutEffect(() => {
-    const chatRef = collection(firebaseDB, 'chats');
-    const q = query(chatRef, orderBy('createdAt', 'desc'));
-
-    const unsubscribe = onSnapshot(q, (snapshot) => {
-      // console.log(snapshot);
-      setMessages(
-        snapshot.docs.map((doc) => ({
+    const unsubscribe = onSnapshot(doc(firebaseDB, 'chats', roomId), (doc) => {
+      setMessageList(
+        doc.data().messages.map((doc) => ({
           _id: doc.id,
-          createdAt: doc.data().createdAt.toDate(),
-          text: doc.data().text,
-          user: doc.data().user,
+          createdAt: doc.createdAt.toDate(),
+          text: doc.text,
+          user: doc.user,
         }))
       );
     });
-
     return () => unsubscribe();
   }, []);
 
   const onSend = useCallback((messages = []) => {
-    setMessages((prevMessages) => GiftedChat.append(prevMessages, messages));
-    const chatRef = collection(firebaseDB, 'chats');
+    setMessageList((prevMessages) => GiftedChat.append(prevMessages, messages));
 
     const { _id, createdAt, text, user } = messages[0];
-    console.log('mess: ', messages);
-    addDoc(chatRef, {
-      _id,
-      createdAt,
-      text,
-      user,
-    });
-  });
-  // const onSend = useCallback((messages = []) => {
-  //   setMessages((prevMessages) => GiftedChat.append(prevMessages, messages));
-  //   const chatRef = collection(firebaseDB, 'chats');
+    const update = async () => {
+      const roomRef = doc(firebaseDB, 'chats', roomId);
 
-  //   const { _id, createdAt, text, user } = messages[0];
-  //   console.log('mess: ', messages);
-  //   addDoc(chatRef, {
-  //     _id,
-  //     createdAt,
-  //     text,
-  //     user,
-  //   });
-  // });
+      await updateDoc(roomRef, {
+        messages: [...messageList, { _id, createdAt, text, user }],
+      });
+    };
+    update();
+  });
 
   const customToolbar = (props) => {
     return (
@@ -67,6 +58,7 @@ const Chat = () => {
         containerStyle={{
           backgroundColor: 'lightblue',
           color: 'black',
+          paddingVertical: 10,
         }}
       />
     );
@@ -75,13 +67,19 @@ const Chat = () => {
   return (
     <View style={styles.container}>
       <GiftedChat
-        messages={messages}
-        onSend={(messages) => onSend(messages)}
+        messages={messageList}
+        onSend={(messages) => (
+          onSend(messages), console.log('ingoing: ', messages)
+        )}
         user={{
           _id: firebaseAuth?.currentUser?.uid,
           avatar: null,
         }}
-        messagesContainerStyle={{ backgroundColor: '#333', padding: 10 }}
+        messagesContainerStyle={{
+          backgroundColor: '#333',
+          padding: 10,
+          paddingBottom: 30,
+        }}
         renderInputToolbar={(props) => customToolbar(props)}
       />
     </View>

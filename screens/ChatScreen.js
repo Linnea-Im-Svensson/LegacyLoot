@@ -1,4 +1,5 @@
-import { useCallback, useLayoutEffect, useState } from 'react';
+import { useCallback, useLayoutEffect, useState, useContext } from 'react';
+import { LegacyLootContext } from '../store/context/legacyLootContext';
 import { View, Text, StyleSheet, ScrollView, Image } from 'react-native';
 import { GiftedChat } from 'react-native-gifted-chat';
 import { useNavigation } from '@react-navigation/native';
@@ -18,6 +19,7 @@ const ChatScreen = () => {
   const [chatrooms, setChatrooms] = useState([]);
   const navigation = useNavigation();
   const [deleteBtn, setDeleteBtn] = useState({ active: false, chatId: null });
+  const { chatroomRefresh } = useContext(LegacyLootContext);
 
   useLayoutEffect(() => {
     const chatRef = collection(firebaseDB, 'chats');
@@ -47,7 +49,7 @@ const ChatScreen = () => {
     getChatRooms();
 
     return () => unsubscribe();
-  }, []);
+  }, [chatroomRefresh]);
 
   console.log(chatrooms);
   return (

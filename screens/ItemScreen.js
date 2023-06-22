@@ -32,7 +32,8 @@ export const deleteItem = async (itemId) => {
 
 const ItemScreen = ({ route }) => {
   const { item } = route.params;
-  const { userAccount } = useContext(LegacyLootContext);
+  const { userAccount, setChatroomRefresh, chatroomRefresh } =
+    useContext(LegacyLootContext);
   const [qr, setQr] = useState();
   const navigation = useNavigation();
 
@@ -72,9 +73,8 @@ const ItemScreen = ({ route }) => {
       messages: [],
     });
 
-    console.log(newRoom.data());
-
-    navigation.navigate('Chatroom');
+    setChatroomRefresh(!chatroomRefresh);
+    navigation.navigate('Chat');
   };
 
   // navigation.navigate('QR', { blob: qr, item: item });

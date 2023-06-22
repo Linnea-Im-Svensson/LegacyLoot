@@ -8,6 +8,7 @@ export const LegacyLootContext = createContext({
   userAccount: [],
   refresh: true,
   profileRefresh: false,
+  chatroomRefresh: false,
   loading: false,
   image: '',
   upImage: '',
@@ -18,6 +19,7 @@ export const LegacyLootContext = createContext({
   setUserAccount: () => {},
   setRefresh: () => {},
   setProfileRefresh: () => {},
+  setChatroomRefresh: () => {},
   getAllItems: () => {},
   setLoading: () => {},
   setImage: () => {},
@@ -34,6 +36,7 @@ const LegacyLootContextProvider = ({ children }) => {
   const [userAccount, setUserAccount] = useState(null);
   const [refresh, setRefresh] = useState(true);
   const [profileRefresh, setProfileRefresh] = useState(true);
+  const [chatroomRefresh, setChatroomRefresh] = useState(true);
   const [loading, setLoading] = useState(false);
   const itemCollectionRef = collection(firebaseDB, 'items');
   const [image, setImage] = useState(null);
@@ -60,8 +63,8 @@ const LegacyLootContextProvider = ({ children }) => {
       const data = await getDocs(
         query(
           profileItemCollectionRef,
-          orderBy('createdAt', 'desc'),
-          where('uid', '==', userAccount.uid)
+          where('uid', '==', userAccount.uid),
+          orderBy('createdAt', 'desc')
         )
       );
       setProfileItemList(
@@ -104,6 +107,7 @@ const LegacyLootContextProvider = ({ children }) => {
         userAccount,
         refresh,
         profileRefresh,
+        chatroomRefresh,
         loading,
         image,
         upImage,
@@ -114,6 +118,7 @@ const LegacyLootContextProvider = ({ children }) => {
         setUserAccount,
         setRefresh,
         setProfileRefresh,
+        setChatroomRefresh,
         getAllItems,
         setLoading,
         setImage,

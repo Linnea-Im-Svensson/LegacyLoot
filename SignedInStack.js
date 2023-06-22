@@ -14,6 +14,7 @@ import QRScreen from './screens/QRScreen';
 import { doc, query, updateDoc, where } from 'firebase/firestore';
 import BookmarkScreen from './screens/BookmarkScreen';
 import Chat from './components/Chat';
+import ChatScreen from './screens/ChatScreen';
 
 const InsideStack = createNativeStackNavigator();
 
@@ -168,6 +169,7 @@ const SignedInStack = () => {
         component={Chat}
         options={({ route }) => ({
           title: route.params.room.roomName,
+          room: route.params.room,
         })}
       />
     </InsideStack.Navigator>
