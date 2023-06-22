@@ -15,7 +15,7 @@ Database is handled by Firebase
 
 https://github.com/ChasAcademy-Linnea-Svensson/LegacyLoot
 
-### Deployed here: :point_down:
+<!-- ### Deployed here: :point_down: -->
 
 ### Future plans:
 
@@ -25,3 +25,8 @@ https://github.com/ChasAcademy-Linnea-Svensson/LegacyLoot
 - [ ] Profile registration, profile picture and name
 - [ ] Bid button
 - [ ] Deploy app
+
+### Bug fixing plans:
+
+- [ ] Delay when generating qr code.
+- [ ] Chat only fetches rooms created by current user
