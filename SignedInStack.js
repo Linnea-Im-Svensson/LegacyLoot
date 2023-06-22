@@ -77,7 +77,7 @@ const SignedInStack = () => {
           title: 'LegacyLoot',
           headerTitleStyle: {
             fontSize: 30,
-            fontWeight: '8test00',
+            fontWeight: '800',
           },
         }}
       />

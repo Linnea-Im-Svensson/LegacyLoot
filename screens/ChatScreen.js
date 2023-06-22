@@ -25,25 +25,34 @@ const ChatScreen = () => {
     const chatRef = collection(firebaseDB, 'chats');
     const q = query(
       chatRef,
-      where(('sellerId', 'buyerId'), '==', firebaseAuth.currentUser.uid),
+      where('buyerId' || 'sellerId', '==', firebaseAuth.currentUser.uid),
       orderBy('createdAt', 'desc')
     );
+    console.log(firebaseAuth.currentUser.uid);
 
     const getChatRooms = async () => {
       const data = await getDocs(
         query(
           chatRef,
-          where(('sellerId', 'buyerId'), '==', firebaseAuth.currentUser.uid)
+          where('buyerId' || 'sellerId', '==', firebaseAuth.currentUser.uid)
         ),
         orderBy('createdAt', 'desc')
       );
       setChatrooms(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+
+      // if (chatrooms.length === 0) {
+      //   const data = await getDocs(
+      //     query(chatRef, where('sellerId', '==', firebaseAuth.currentUser.uid)),
+      //     orderBy('createdAt', 'desc')
+      //   );
+      //   setChatrooms(data.docs.map((doc) => ({ ...doc.data(), id: doc.id })));
+      // }
     };
 
     const unsubscribe = onSnapshot(q, (snapshot) => {
       // console.log(snapshot);
       setChatrooms(snapshot.docs.map((doc) => doc.data()));
-      console.log('snap: ', chatrooms);
+      // console.log('snap: ', chatrooms);
     });
 
     getChatRooms();
@@ -51,13 +60,12 @@ const ChatScreen = () => {
     return () => unsubscribe();
   }, [chatroomRefresh]);
 
-  console.log(chatrooms);
   return (
     <View style={styles.container}>
       <ScrollView style={styles.chatroomContainer}>
         {chatrooms.map((room) => (
           <TouchableOpacity
-            key={room.id}
+            key={room._id}
             style={styles.roomContainer}
             onPress={() => navigation.navigate('Chatroom', { room })}
           >

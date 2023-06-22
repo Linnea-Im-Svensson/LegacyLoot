@@ -1,6 +1,6 @@
 import { useCallback, useLayoutEffect, useState } from 'react';
 import { View, Text, StyleSheet, SafeAreaView } from 'react-native';
-import { GiftedChat, InputToolbar } from 'react-native-gifted-chat';
+import { Bubble, GiftedChat, InputToolbar } from 'react-native-gifted-chat';
 import { useNavigation } from '@react-navigation/native';
 import {
   addDoc,
@@ -20,6 +20,8 @@ import { color } from 'react-native-reanimated';
 const Chat = ({ route }) => {
   const [messageList, setMessageList] = useState([]);
   const roomId = route.params.room.id;
+  const room = route.params.room;
+  console.log('chat room: ', room.messages);
   const [testa, setTesta] = useState(null);
   console.log('message: ', messageList);
 
@@ -27,7 +29,7 @@ const Chat = ({ route }) => {
     const unsubscribe = onSnapshot(doc(firebaseDB, 'chats', roomId), (doc) => {
       setMessageList(
         doc.data().messages.map((doc) => ({
-          _id: doc.id,
+          _id: doc._id,
           createdAt: doc.createdAt.toDate(),
           text: doc.text,
           user: doc.user,
@@ -45,7 +47,7 @@ const Chat = ({ route }) => {
       const roomRef = doc(firebaseDB, 'chats', roomId);
 
       await updateDoc(roomRef, {
-        messages: [...messageList, { _id, createdAt, text, user }],
+        messages: [{ _id, createdAt, text, user }, ...messageList],
       });
     };
     update();
@@ -56,9 +58,20 @@ const Chat = ({ route }) => {
       <InputToolbar
         {...props}
         containerStyle={{
-          backgroundColor: 'lightblue',
-          color: 'black',
           paddingVertical: 10,
+        }}
+      />
+    );
+  };
+  const customBubble = (props) => {
+    return (
+      <Bubble
+        {...props}
+        wrapperStyle={{
+          right: {
+            backgroundColor: '#1791AC',
+            marginBottom: 10,
+          },
         }}
       />
     );
@@ -81,6 +94,8 @@ const Chat = ({ route }) => {
           paddingBottom: 30,
         }}
         renderInputToolbar={(props) => customToolbar(props)}
+        renderBubble={(props) => customBubble(props)}
+        textInputProps={{ color: 'reds' }}
       />
     </View>
   );
